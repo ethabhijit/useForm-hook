@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { useQuery } from "react-query";
+const URL = "https://random.dog/woof.json";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+	const { isLoading, error, data } = useQuery("Dogs", () =>
+		fetch(URL).then((res) => res.json())
+	);
+	console.log(error);
+	return (
+		<div>
+			{error && <h1>Error! Try Again...</h1>}
+			{isLoading && <h1>Loading...</h1>}
+			{!error && data?.url && (
+				<div>
+					<h2>Success</h2>
+					<img src={data.url} width="400" alt="Dog" />
+				</div>
+			)}
+		</div>
+	);
+};
 
 export default App;
